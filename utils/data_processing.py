@@ -3,7 +3,7 @@ Data processing utilities.
 
 This module contains functions to:
 - read the data
-- preprocess the data
+- preprocess the data with normalization
 - make dataset
 """
 
@@ -28,12 +28,15 @@ def recup_slices(n_run, slicedir, sliceid, idtime, nlaps, champs):
     return slices, xxh, yyh, tt
 
 def normalize(X):
+    if len(X.shape)==3:
+        npaxis, taxis = (0,1), [0,1]
+    else : npaxis, taxis = (0,1,2), [0,1,2]        
     if isinstance(X, np.ndarray):
-        X_mean = np.mean(X, axis=(0, 1))
-        X_std = np.std(X, axis=(0, 1))
+        X_mean = np.mean(X, axis=npaxis)
+        X_std = np.std(X, axis=npaxis)
     elif isinstance(X, torch.Tensor):
-        X_mean = torch.mean(X, axis=[0, 1])
-        X_std = torch.std(X, axis=[0, 1])
+        X_mean = torch.mean(X, axis=taxis)
+        X_std = torch.std(X, axis=taxis)
     else:
         raise ValueError('Type not supported')
     X_normed = (X - X_mean) / X_std

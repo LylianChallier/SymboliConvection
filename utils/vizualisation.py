@@ -2,7 +2,10 @@
 Vizualisation utilities.
 
 This module contains functions to:
-- 
+- get plot parameters to make report
+- plot training/testing metrics during the training
+- plot prediction ans NRMSE error on the (t, z) field
+- plot NRMSE distribution and feature importance
 """
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -66,7 +69,7 @@ def plot_metrics(losses, save=False, folder='FIGURES', save_id=None):
         plt.savefig(f'{folder}/metrics_{save_id}.pdf', bbox_inches='tight', backend='pdf')
     plt.show()
 
-def plot_results(t, z, y, pred, train_id=None, save=False, folder='FIGURES', save_id = None):
+def plot_results(t, z, y, pred, train_id=None, save=False, folder='FIGURES', save_id = None, norm=None, res_norm=None):
     fig = plt.figure(figsize=(16, 8))
     ax1 = plt.subplot(2, 3, 1)
     ax2 = plt.subplot(2, 3, 2)
@@ -75,8 +78,10 @@ def plot_results(t, z, y, pred, train_id=None, save=False, folder='FIGURES', sav
     ax5 = plt.subplot(2, 3, 5)
     ax6 = plt.subplot(2, 3, 6)
 
-    res_norm = mcolors.Normalize(vmin=0.0, vmax=0.2)
-    norm = mcolors.TwoSlopeNorm(vmin=-20.0, vcenter=0.0, vmax=20.0)
+    if res_norm == None :   
+        res_norm = mcolors.Normalize(vmin=0.0, vmax=0.2)
+    if norm == None : 
+        norm = mcolors.TwoSlopeNorm(vmin=-20.0, vcenter=0.0, vmax=20.0)
 
     im1 = ax1.pcolor(t, z, y[:, :, 0].T, cmap='seismic', norm=norm)
     if not train_id == None :
@@ -134,16 +139,17 @@ def plot_results(t, z, y, pred, train_id=None, save=False, folder='FIGURES', sav
         plt.savefig(f'{folder}/prediction_{save_id}.pdf', bbox_inches='tight', transparent=True, backend='pdf')
     plt.show()
 
-def plot_nrmse_distribution(NRMSE, num_pb, folder='FIGURES'):
+def plot_nrmse_distribution(NRMSE, save = False, folder='FIGURES', save_id = None):
     plt.hist(NRMSE.flatten(), bins=100)
     plt.title("Distribution des NRMSE")
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(f'{folder}/pb{num_pb}_nrmse_kan.png', dpi=300, bbox_inches='tight', transparent=True)
-    plt.savefig(f'{folder}/pb{num_pb}_nrmse_kan.pdf', bbox_inches='tight', transparent=True, backend='pdf')
+    if save : 
+        plt.savefig(f'{folder}/distrib_nrmse_{save_id}.png', dpi=300, bbox_inches='tight', transparent=True)
+        plt.savefig(f'{folder}/distrib_nrmse_{save_id}.pdf', bbox_inches='tight', transparent=True, backend='pdf')
     plt.show()
 
-def plot_feature_importance(scores, features, num_pb, folder='FIGURES'):
+def plot_feature_importance(scores, features, save=False, folder='FIGURES', save_id=None):
     plt.figure(figsize=(12, 6))
     bars = plt.bar(features, scores, color='tab:blue')
     plt.yscale('log')
@@ -156,6 +162,7 @@ def plot_feature_importance(scores, features, num_pb, folder='FIGURES'):
         plt.text(bar.get_x() + bar.get_width() / 2, height * 1.0, f'{height:.2e}', ha='center', va='bottom', fontsize=12)
     plt.tight_layout()
     plt.grid(False)
-    plt.savefig(f'{folder}/pb{num_pb}_varimp_kan.png', dpi=300, bbox_inches='tight', transparent=True)
-    plt.savefig(f'{folder}/pb{num_pb}_varimp_kan.pdf', bbox_inches='tight', transparent=True, backend='pdf')
+    if save : 
+        plt.savefig(f'{folder}/var_importance_{save_id}.png', dpi=300, bbox_inches='tight', transparent=True)
+        plt.savefig(f'{folder}/var_importance_{save_id}.pdf', bbox_inches='tight', transparent=True, backend='pdf')
     plt.show()
