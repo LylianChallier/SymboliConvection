@@ -99,7 +99,10 @@ $$\arg \min_{\Xi, W} \dfrac{1}{2}||\dot{X}-\Psi(X)\Xi||^2_2 + \lambda||W||_1 + \
 
 Voir les notebooks pour le détails. 
 
-Synthèse : **A REMPLIR** 
+Synthèse : 
+- dans derivee_spatiale, on a des performances similaires (autour de 0.73-0.75 de $R^2$) mais la tendance générale est aux erreurs proche de la paroi => on va donc essayer de spécialisser les modèles dans couche_visqueuse ;
+- dans couche_visqueuse, on a des performances significativement meilleures pour les modèles KANs mais SINDy reste le plus interprétable ;
+- pour améliorer le tout, il faudrait assembler des modèles experts de la couche visqueuse avec des modèles expert de l'écoulement externe, et traiter de manière distincts l'estimation de $\partial_z u$ et $\partial_z \theta$ ou bien customiser la fonction de coût afin d'équilibrer les modèles sur ces deux objectifs.
 
 ## 💻 Installation
 

@@ -7,10 +7,8 @@ This module contains functions to:
 - make dataset
 """
 
-import os
 import numpy as np
 import torch
-import h5py
 from utils.tools.tools_hdf5 import Read_H5_Spav
 
 def recup_slices(n_run, slicedir, sliceid, idtime, nlaps, champs):
